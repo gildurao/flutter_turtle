@@ -70,6 +70,7 @@ class _TreePageState extends State<TreePage> {
                 child: Text('An example from https://www.calormen.com/jslogo/'),
               ),
               AnimatedTurtleView(
+                animationDuration: Duration(seconds: 10),
                 child: Container(width: double.infinity, height: 600),
                 commands: commands,
               )
