@@ -1,7 +1,19 @@
+import 'dart:collection';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_turtle/flutter_turtle.dart';
+
+@immutable
+class TurtleData {
+  final Offset position;
+  final double degrees;
+
+  TurtleData(
+    this.position,
+    this.degrees,
+  );
+}
 
 /// Represents macros.
 class Macro {
@@ -25,6 +37,8 @@ class TurtleState {
   ///
   /// The turtle is in the center of a canvas by default.
   Offset position = Offset(0.0, 0.0);
+
+  Queue turtleStack = Queue<TurtleData>();
 
   /// The angle of the turtle.
   ///
