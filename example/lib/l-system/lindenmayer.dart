@@ -269,9 +269,8 @@ class LSystem {
   Note chooseNote() {
     final random = new math.Random();
     int newNote = cScale.elementAt(random.nextInt(cScale.length));
-    final isIntervalBiggerThanOctave =
-        (newNote - currentNote.midiPitch).abs() >= 12;
-    final areNotesEqual = (newNote - currentNote.midiPitch).abs() == 0;
+    final isIntervalBiggerThanOctave = (newNote - currentNote.midiPitch) >= 12;
+    final areNotesEqual = (newNote - currentNote.midiPitch) == 0;
     while (isIntervalBiggerThanOctave || areNotesEqual) {
       newNote = cScale.elementAt(random.nextInt(cScale.length));
     }
