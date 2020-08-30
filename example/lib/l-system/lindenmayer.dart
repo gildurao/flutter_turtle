@@ -277,9 +277,8 @@ class LSystem {
     }
     final keys = durationValues.keys.toList();
     Durations newKey = keys.elementAt(random.nextInt(keys.length));
-    while (durationValues[newKey] == currentNote.duration) {
-      newKey = keys.elementAt(random.nextInt(keys.length));
-    }
+
+    newKey = keys.elementAt(random.nextInt(keys.length));
 
     return Note(
       duration: durationValues[newKey],
