@@ -37,7 +37,7 @@ class _LSystemPageState extends State<LSystemPage> {
 
   @override
   Widget build(BuildContext context) {
-    dragon.generate(6);
+    dragon.generate(2);
     return Scaffold(
       body: InteractiveViewer(
         child: Column(
