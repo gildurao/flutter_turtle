@@ -19,6 +19,8 @@ class LSystem {
   String sentence;
   List<Rule> ruleSet;
   List<TurtleCommand> turtleCommands = [];
+  List<int> midiNotes = [];
+  int currentNote = 60;
   int generation;
 
   LSystem(
@@ -85,7 +87,10 @@ class LSystem {
       iterations--;
       generation++;
     }
-    parseFractalPlant();
+    parseFractalPlant3();
+    //parseFractalCarpet();
+    //parsePeanoCurve();
+    //parseFractalPlant();
     //parseDragonCurve();
     //parseToCommands();
     //parseToKochCurve();
@@ -102,6 +107,64 @@ class LSystem {
       if (character == '+') turtleCommands.add(Left((_) => 25.0));
       if (character == '[') turtleCommands.add(SaveState());
       if (character == ']') turtleCommands.add(PopState());
+    }
+  }
+
+  void parseFractalPlant3() {
+    for (int i = 0; i < sentence.length; i++) {
+      String character = sentence[i];
+      if (character == 'F') {
+        turtleCommands.add(Forward((_) => 20.0));
+        midiNotes.add(currentNote);
+      }
+      if (character == '-') {
+        turtleCommands.add(Right((_) => 18));
+        currentNote >= 0 && currentNote <= 256
+            ? currentNote -= 2
+            : currentNote = 60; //Lower 2 semitones
+        midiNotes.add(currentNote);
+      }
+      if (character == '+') {
+        turtleCommands.add(Left((_) => 18));
+        currentNote >= 0 && currentNote <= 256
+            ? currentNote += 2
+            : currentNote = 60; //Up 2 semitones
+        midiNotes.add(currentNote);
+      }
+      if (character == '[') {
+        turtleCommands.add(SaveState());
+      }
+      if (character == ']') {
+        turtleCommands.add(PopState());
+      }
+    }
+  }
+
+  void parseFractalPlant2() {
+    for (int i = 0; i < sentence.length; i++) {
+      String character = sentence[i];
+      if (character == 'F') turtleCommands.add(Forward((_) => 3.0));
+      if (character == '-') turtleCommands.add(Right((_) => 25.7));
+      if (character == '+') turtleCommands.add(Left((_) => 25.7));
+      if (character == '[') turtleCommands.add(SaveState());
+      if (character == ']') turtleCommands.add(PopState());
+    }
+  }
+
+  void parseFractalCarpet() {
+    for (int i = 0; i < sentence.length; i++) {
+      String character = sentence[i];
+      if (character == 'F') turtleCommands.add(Forward((_) => 2));
+      if (character == '+') turtleCommands.add(Right((_) => 90.0));
+    }
+  }
+
+  void parsePeanoCurve() {
+    for (int i = 0; i < sentence.length; i++) {
+      String character = sentence[i];
+      if (character == 'F') turtleCommands.add(Forward((_) => 10));
+      if (character == '-') turtleCommands.add(Left((_) => 90.0));
+      if (character == '+') turtleCommands.add(Right((_) => 90.0));
     }
   }
 
