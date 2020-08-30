@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_turtle/flutter_turtle.dart';
 import 'dart:math' as math;
+import 'dart:core';
 
 const cScale = [
   60, // C
@@ -80,7 +81,7 @@ class LSystem {
     midiPitch: 60,
   );
   Note lastNote = Note(
-    duration: durationValues[Durations.Whole],
+    duration: durationValues[Durations.Whole] * 2,
     midiPitch: 96,
   );
   int generation;
@@ -257,22 +258,31 @@ class LSystem {
     midiNotes.add(
       lastNote,
     );
+    midiNotes.add(
+      Note(
+        duration: durationValues[Durations.Whole] * 2,
+        midiPitch: 48,
+      ),
+    );
   }
 
   Note chooseNote() {
     final random = new math.Random();
     int newNote = cScale.elementAt(random.nextInt(cScale.length));
-    while (newNote - currentNote.midiPitch >= 12 ||
-        newNote - currentNote.midiPitch == 0) {
+    final isIntervalBiggerThanOctave =
+        (newNote - currentNote.midiPitch).abs() >= 12;
+    final areNotesEqual = (newNote - currentNote.midiPitch).abs() == 0;
+    while (isIntervalBiggerThanOctave || areNotesEqual) {
       newNote = cScale.elementAt(random.nextInt(cScale.length));
     }
     final keys = durationValues.keys.toList();
-    Durations key = keys.elementAt(random.nextInt(keys.length));
-
-    key = keys.elementAt(random.nextInt(keys.length));
+    Durations newKey = keys.elementAt(random.nextInt(keys.length));
+    while (durationValues[newKey] == currentNote.duration) {
+      newKey = keys.elementAt(random.nextInt(keys.length));
+    }
 
     return Note(
-      duration: durationValues[key],
+      duration: durationValues[newKey],
       midiPitch: newNote,
     );
   }
