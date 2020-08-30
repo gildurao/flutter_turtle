@@ -87,11 +87,11 @@ class LSystem {
       iterations--;
       generation++;
     }
-    parseFractalPlant3();
+    //parseFractalPlant3();
     //parseFractalCarpet();
     //parsePeanoCurve();
     //parseFractalPlant();
-    //parseDragonCurve();
+    parseDragonCurve();
     //parseToCommands();
     //parseToKochCurve();
     //parseToCommands();
@@ -182,9 +182,24 @@ class LSystem {
   void parseDragonCurve() {
     for (int i = 0; i < sentence.length; i++) {
       String character = sentence[i];
-      if (character == 'F') turtleCommands.add(Forward((_) => 2.0));
-      if (character == '-') turtleCommands.add(Left((_) => 90.0));
-      if (character == '+') turtleCommands.add(Right((_) => 90.0));
+      if (character == 'F') {
+        turtleCommands.add(Forward((_) => 2.0));
+        midiNotes.add(currentNote);
+      }
+      if (character == '-') {
+        turtleCommands.add(Left((_) => 90.0));
+        currentNote >= 0 && currentNote <= 256
+            ? currentNote -= 2
+            : currentNote = 60; //Lower 2 semitones
+        midiNotes.add(currentNote);
+      }
+      if (character == '+') {
+        turtleCommands.add(Right((_) => 90.0));
+        currentNote >= 0 && currentNote <= 256
+            ? currentNote += 2
+            : currentNote = 60; //Up 2 semitones
+        midiNotes.add(currentNote);
+      }
     }
   }
 
