@@ -183,7 +183,7 @@ class LSystem {
     for (int i = 0; i < sentence.length; i++) {
       String character = sentence[i];
       if (character == 'F') {
-        turtleCommands.add(Forward((_) => 2.0));
+        turtleCommands.add(Forward((_) => 5.0));
         midiNotes.add(currentNote);
       }
       if (character == '-') {
@@ -196,7 +196,7 @@ class LSystem {
       if (character == '+') {
         turtleCommands.add(Right((_) => 90.0));
         currentNote >= 0 && currentNote <= 256
-            ? currentNote += 2
+            ? currentNote += 4
             : currentNote = 60; //Up 2 semitones
         midiNotes.add(currentNote);
       }

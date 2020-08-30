@@ -8,7 +8,6 @@ import 'package:flutter_turtle/flutter_turtle.dart';
 import 'package:flutter_midi/flutter_midi.dart';
 
 import '../l-system/examples.dart';
-import '../l-system/examples.dart';
 
 class LSystemPage extends StatefulWidget {
   const LSystemPage({Key key}) : super(key: key);
@@ -19,7 +18,7 @@ class LSystemPage extends StatefulWidget {
 
 class _LSystemPageState extends State<LSystemPage> {
   final _flutterMidi = FlutterMidi();
-
+  int i = 0;
   @override
   void initState() {
     super.initState();
@@ -38,7 +37,7 @@ class _LSystemPageState extends State<LSystemPage> {
 
   @override
   Widget build(BuildContext context) {
-    dragon.generate(1);
+    dragon.generate(10);
     return Scaffold(
       body: InteractiveViewer(
         child: Column(
@@ -55,14 +54,13 @@ class _LSystemPageState extends State<LSystemPage> {
             ),
             FlatButton(
               onPressed: () {
-                for (int note in fractalPlant3.midiNotes) {
-                  Future.delayed(
-                    Duration(
-                      milliseconds: 1000,
-                    ),
-                    () => _flutterMidi.playMidiNote(midi: note),
-                  );
-                }
+                Timer.periodic(Duration(milliseconds: 250), (timer) {
+                  if (i <= dragon.midiNotes.length) {
+                    _flutterMidi.playMidiNote(
+                        midi: dragon.midiNotes.elementAt(i));
+                  }
+                  i++;
+                });
               },
               child: Text(
                 'Play Notes',
