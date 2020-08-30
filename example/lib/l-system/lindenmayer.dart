@@ -2,6 +2,61 @@ import 'package:flutter/material.dart';
 import 'package:flutter_turtle/flutter_turtle.dart';
 import 'dart:math' as math;
 
+const cScale = [
+  60, // C
+  62, // D
+  64, // E
+  65, // F
+  67, // G
+  69, // A
+  71, // B
+  72, // C
+  74, // D
+  76, // E
+  77, // F
+  79, // G
+  81, // A
+  83, // B
+  84, // C
+  86, // D
+  88, // E
+  89, // F
+  91, // G
+  93, // A
+  95, // B
+  96, // C
+];
+
+enum Durations {
+  Whole,
+  Half,
+  Quarter,
+  Eigth,
+  Sixteenth,
+  DottedQuarter,
+  DottedHalf,
+}
+
+const Map<Durations, int> durationValues = {
+  Durations.Whole: 2000,
+  Durations.Half: 1000,
+  Durations.Quarter: 500,
+  Durations.Eigth: 250,
+  Durations.Sixteenth: 125,
+  Durations.DottedQuarter: 750,
+  Durations.DottedHalf: 1500,
+};
+
+class Note {
+  final int midiPitch;
+  final int duration;
+
+  const Note({
+    this.duration,
+    this.midiPitch,
+  });
+}
+
 class Rule {
   String a;
   String b;
@@ -19,8 +74,15 @@ class LSystem {
   String sentence;
   List<Rule> ruleSet;
   List<TurtleCommand> turtleCommands = [];
-  List<int> midiNotes = [];
-  int currentNote = 60;
+  List<Note> midiNotes = [];
+  Note currentNote = Note(
+    duration: durationValues[Durations.Quarter],
+    midiPitch: 60,
+  );
+  Note lastNote = Note(
+    duration: durationValues[Durations.Whole],
+    midiPitch: 96,
+  );
   int generation;
 
   LSystem(
@@ -115,21 +177,17 @@ class LSystem {
       String character = sentence[i];
       if (character == 'F') {
         turtleCommands.add(Forward((_) => 20.0));
-        midiNotes.add(currentNote);
+        //midiNotes.add(currentNote);
       }
       if (character == '-') {
         turtleCommands.add(Right((_) => 18));
-        currentNote >= 0 && currentNote <= 256
-            ? currentNote -= 2
-            : currentNote = 60; //Lower 2 semitones
-        midiNotes.add(currentNote);
+        //currentNote = cScale.elementAt(math.Random().nextInt(cScale.length));
+        //midiNotes.add(currentNote);
       }
       if (character == '+') {
         turtleCommands.add(Left((_) => 18));
-        currentNote >= 0 && currentNote <= 256
-            ? currentNote += 2
-            : currentNote = 60; //Up 2 semitones
-        midiNotes.add(currentNote);
+        //currentNote = cScale.elementAt(math.Random().nextInt(cScale.length));
+        //midiNotes.add(currentNote);
       }
       if (character == '[') {
         turtleCommands.add(SaveState());
@@ -188,19 +246,35 @@ class LSystem {
       }
       if (character == '-') {
         turtleCommands.add(Left((_) => 90.0));
-        currentNote >= 0 && currentNote <= 256
-            ? currentNote -= 2
-            : currentNote = 60; //Lower 2 semitones
-        midiNotes.add(currentNote);
+
+        currentNote = chooseNote();
       }
       if (character == '+') {
         turtleCommands.add(Right((_) => 90.0));
-        currentNote >= 0 && currentNote <= 256
-            ? currentNote += 4
-            : currentNote = 60; //Up 2 semitones
-        midiNotes.add(currentNote);
+        currentNote = chooseNote();
       }
     }
+    midiNotes.add(
+      lastNote,
+    );
+  }
+
+  Note chooseNote() {
+    final random = new math.Random();
+    int newNote = cScale.elementAt(random.nextInt(cScale.length));
+    while (newNote - currentNote.midiPitch >= 12 ||
+        newNote - currentNote.midiPitch == 0) {
+      newNote = cScale.elementAt(random.nextInt(cScale.length));
+    }
+    final keys = durationValues.keys.toList();
+    Durations key = keys.elementAt(random.nextInt(keys.length));
+
+    key = keys.elementAt(random.nextInt(keys.length));
+
+    return Note(
+      duration: durationValues[key],
+      midiPitch: newNote,
+    );
   }
 
   void parseSierpinskiTriangle() {

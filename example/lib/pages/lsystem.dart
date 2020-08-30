@@ -54,10 +54,14 @@ class _LSystemPageState extends State<LSystemPage> {
             ),
             FlatButton(
               onPressed: () {
-                Timer.periodic(Duration(milliseconds: 250), (timer) {
+                Timer.periodic(
+                    Duration(
+                      milliseconds: dragon.midiNotes.elementAt(i).duration,
+                    ), (timer) {
                   if (i <= dragon.midiNotes.length) {
                     _flutterMidi.playMidiNote(
-                        midi: dragon.midiNotes.elementAt(i));
+                      midi: dragon.midiNotes.elementAt(i).midiPitch,
+                    );
                   }
                   i++;
                 });
