@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_turtle_example/l-system/examples.dart';
@@ -53,11 +55,10 @@ class _LSystemPageState extends State<LSystemPage> {
                 for (int note in fractalPlant3.midiNotes) {
                   Future.delayed(
                     Duration(
-                      seconds: 1,
+                      milliseconds: 500,
                     ),
-                  ).then((value) => _flutterMidi.playMidiNote(
-                        midi: note,
-                      ));
+                    () => _flutterMidi.playMidiNote(midi: note),
+                  );
                 }
               },
               child: Text(
