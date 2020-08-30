@@ -81,7 +81,7 @@ class LSystem {
     midiPitch: 60,
   );
   Note lastNote = Note(
-    duration: durationValues[Durations.Whole] * 2,
+    duration: durationValues[Durations.Whole] * 4,
     midiPitch: 96,
   );
   int generation;
@@ -260,7 +260,7 @@ class LSystem {
     );
     midiNotes.add(
       Note(
-        duration: durationValues[Durations.Whole] * 2,
+        duration: durationValues[Durations.Whole] * 4,
         midiPitch: 48,
       ),
     );
@@ -269,14 +269,18 @@ class LSystem {
   Note chooseNote() {
     final random = new math.Random();
     int newNote = cScale.elementAt(random.nextInt(cScale.length));
-    while (newNote - currentNote.midiPitch >= 12 ||
-        newNote - currentNote.midiPitch == 0) {
+    final pitchDiff = (newNote - currentNote.midiPitch).abs();
+    final intervalLargerThanOctave = pitchDiff >= 12;
+    final pitchIsEqual = pitchDiff == 0;
+    while (intervalLargerThanOctave || pitchIsEqual) {
       newNote = cScale.elementAt(random.nextInt(cScale.length));
     }
     final keys = durationValues.keys.toList();
     Durations newKey = keys.elementAt(random.nextInt(keys.length));
 
-    newKey = keys.elementAt(random.nextInt(keys.length));
+    while (durationValues[newKey] == currentNote.duration) {
+      newKey = keys.elementAt(random.nextInt(keys.length));
+    }
 
     return Note(
       duration: durationValues[newKey],
