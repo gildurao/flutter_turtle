@@ -72,6 +72,7 @@ class Rule {
 }
 
 class LSystem {
+  final random = new math.Random();
   String sentence;
   List<Rule> ruleSet;
   List<TurtleCommand> turtleCommands = [];
@@ -267,7 +268,6 @@ class LSystem {
   }
 
   Note chooseNote() {
-    final random = new math.Random();
     int newNote = cScale.elementAt(random.nextInt(cScale.length));
     final pitchDiff = (newNote - currentNote.midiPitch).abs();
     final intervalLargerThanOctave = pitchDiff >= 12;
@@ -278,9 +278,7 @@ class LSystem {
     final keys = durationValues.keys.toList();
     Durations newKey = keys.elementAt(random.nextInt(keys.length));
 
-    while (durationValues[newKey] == currentNote.duration) {
-      newKey = keys.elementAt(random.nextInt(keys.length));
-    }
+    newKey = keys.elementAt(random.nextInt(keys.length));
 
     return Note(
       duration: durationValues[newKey],
