@@ -53,8 +53,18 @@ class _LSystemPageState extends State<LSystemPage> {
               ),
             ),
             FlatButton(
-              onPressed: () {
-                Timer.periodic(
+              onPressed: () async {
+                for (int i = 0; i < dragon.midiNotes.length; i++) {
+                  _flutterMidi.playMidiNote(
+                    midi: dragon.midiNotes[i].midiPitch,
+                  );
+                  await Future.delayed(
+                    Duration(
+                      milliseconds: dragon.midiNotes[i].duration,
+                    ),
+                  );
+                }
+                /*Timer.periodic(
                     Duration(
                       milliseconds: dragon.midiNotes.elementAt(i).duration,
                     ), (timer) {
@@ -64,7 +74,7 @@ class _LSystemPageState extends State<LSystemPage> {
                     );
                   }
                   i++;
-                });
+                });*/
               },
               child: Text(
                 'Play Notes',
