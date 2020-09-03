@@ -155,8 +155,9 @@ class LSystem {
     //parseFractalCarpet();
     //parsePeanoCurve();
     //parseFractalPlant();
-    parseDragonCurve();
-    //parseToCommands();
+    //parseDragonCurve();
+    parseToCommands();
+    parseToMusic();
     //parseToKochCurve();
     //parseToCommands();
     //parseSierpinskiTriangle();
@@ -165,12 +166,55 @@ class LSystem {
   void parseToCommands() {
     for (int i = 0; i < sentence.length; i++) {
       String character = sentence[i];
-      if (character == 'F') turtleCommands.add(Forward((_) => 10.0));
-      if (character == 'G') turtleCommands.add(Forward((_) => 10.0));
-      if (character == '-') turtleCommands.add(Right((_) => 25.0));
-      if (character == '+') turtleCommands.add(Left((_) => 25.0));
-      if (character == '[') turtleCommands.add(SaveState());
-      if (character == ']') turtleCommands.add(PopState());
+      if (character == 'F') {
+        turtleCommands.add(Forward((_) => 10.0));
+        midiNotes.add(currentNote);
+      }
+      if (character == 'G') {
+        turtleCommands.add(Forward((_) => 10.0));
+      }
+      if (character == '-') {
+        turtleCommands.add(Right((_) => 25.0));
+      }
+      if (character == '+') {
+        turtleCommands.add(Left((_) => 25.0));
+      }
+      if (character == '[') {
+        turtleCommands.add(SaveState());
+      }
+      if (character == ']') {
+        turtleCommands.add(PopState());
+      }
+    }
+  }
+
+  void parseToMusic() {
+    for (int i = 0; i < sentence.length; i++) {
+      String currentSymbol = sentence[i];
+      int noteDuration = durationValues[Durations.Eigth];
+      int pitch = 60;
+      for (int j = 1; j < sentence.length; j++) {
+        String symbolAfter = sentence[j];
+        if (currentSymbol == symbolAfter && currentSymbol == 'F') {
+          noteDuration += noteDuration;
+        }
+        if (currentSymbol != symbolAfter && currentSymbol == 'F') {
+          currentNote = Note(
+            duration: noteDuration,
+            midiPitch: pitch,
+          );
+          midiNotes.add(currentNote);
+          noteDuration = durationValues[Durations.Eigth];
+        }
+        if (currentSymbol == '+') {
+          int nextIndex = cScale.indexOf(pitch) + 1;
+          pitch = nextIndex <= cScale.length ? cScale[nextIndex] : 60;
+        }
+        if (currentSymbol == '-') {
+          int nextIndex = cScale.indexOf(pitch) - 1;
+          pitch = nextIndex >= 0 ? cScale[nextIndex] : 60;
+        }
+      }
     }
   }
 
@@ -304,9 +348,27 @@ class LSystem {
   void parseToKochCurve() {
     for (int i = 0; i < sentence.length; i++) {
       String character = sentence[i];
-      if (character == 'F') turtleCommands.add(Forward((_) => 15.0));
-      if (character == '+') turtleCommands.add(Left((_) => 60.0));
-      if (character == '-') turtleCommands.add(Right((_) => 60.0));
+      if (character == 'F') {
+        turtleCommands.add(Forward((_) => 5.0));
+        midiNotes.add(currentNote);
+      }
+      if (character == '+') {
+        turtleCommands.add(Left((_) => 60.0));
+        currentNote = chooseNote();
+      }
+      if (character == '-') {
+        turtleCommands.add(Right((_) => 60.0));
+        currentNote = chooseNote();
+      }
     }
+    midiNotes.add(
+      lastNote,
+    );
+    midiNotes.add(
+      Note(
+        duration: durationValues[Durations.Whole] * 2,
+        midiPitch: 48,
+      ),
+    );
   }
 }

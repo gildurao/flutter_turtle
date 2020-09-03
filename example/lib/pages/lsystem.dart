@@ -37,7 +37,7 @@ class _LSystemPageState extends State<LSystemPage> {
 
   @override
   Widget build(BuildContext context) {
-    kochIsland.generate(4);
+    fern.generate(2);
     return Scaffold(
       body: InteractiveViewer(
         child: Column(
@@ -49,18 +49,18 @@ class _LSystemPageState extends State<LSystemPage> {
                   width: double.infinity,
                   height: 600,
                 ),
-                commands: dragon.turtleCommands,
+                commands: fern.turtleCommands,
               ),
             ),
             FlatButton(
               onPressed: () async {
-                for (int i = 0; i < kochIsland.midiNotes.length; i++) {
+                for (int i = 0; i < fern.midiNotes.length; i++) {
                   _flutterMidi.playMidiNote(
-                    midi: kochIsland.midiNotes[i].midiPitch,
+                    midi: fern.midiNotes[i].midiPitch,
                   );
                   await Future.delayed(
                     Duration(
-                      milliseconds: kochIsland.midiNotes[i].duration,
+                      milliseconds: fern.midiNotes[i].duration,
                     ),
                   );
                 }
